@@ -1,0 +1,17 @@
+{
+  "name": "book-directory",
+  "version": "1.0.0",
+  "description": "A simple book app to practice node and express",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "config": "^3.3.6",
+    "express": "^4.17.1",
+    "mongoose": "^5.13.2",
+    "nodemon": "^2.0.12"
+  }
+}
