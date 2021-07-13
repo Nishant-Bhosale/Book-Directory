@@ -3,9 +3,11 @@ const port = 5000 || process.env.PORT;
 const connectDB = require("./config/db");
 const app = express();
 const booksRouter = require("./routes/books");
+const usersRouter = require("./routes/users");
 
 app.use(express.json({ extended: false }));
 app.use(booksRouter);
+app.use(usersRouter);
 
 connectDB();
 
