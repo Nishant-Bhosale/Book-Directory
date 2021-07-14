@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
-const Book = new Schema({
+const bookSchema = new Schema({
 	name: {
 		type: String,
 		required: true,
@@ -19,6 +19,22 @@ const Book = new Schema({
 		type: Number,
 		required: true,
 	},
+	owner: {
+		type: mongoose.Schema.Types.ObjectId,
+		required: true,
+		ref: "user",
+	},
 });
 
-module.exports = mongoose.model("Book", Book);
+bookSchema.methods.removeOwnerProp = function () {
+	const book = this;
+	const bookObject = book.toObject();
+
+	delete bookObject.owner;
+
+	return bookObject;
+};
+
+const Book = mongoose.model("Book", bookSchema);
+
+module.exports = Book;

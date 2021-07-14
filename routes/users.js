@@ -31,7 +31,7 @@ router.post("/users", async (req, res) => {
 
 		const token = await newUser.generateAuthToken();
 
-		res.status(201).json({ newUser, token });
+		res.status(201).json({ newUser: newUser.getPublicProfile(), token });
 	} catch (error) {
 		console.log(error);
 		res.status(500).send();
@@ -46,7 +46,7 @@ router.post("/users/login", async (req, res) => {
 
 		const token = await user.generateAuthToken();
 
-		res.status(200).json({ user, token });
+		res.status(200).json({ user: user.getPublicProfile(), token });
 	} catch (error) {
 		console.log(error);
 		res.status(500).send(error);
@@ -94,6 +94,7 @@ router.put("/users/me", auth, async (req, res) => {
 	if (!valid) {
 		return res.status(400).send({ error: "Please enter all fields correctly" });
 	}
+
 	try {
 		updates.forEach((update) => {
 			req.user[update] = req.body[update];

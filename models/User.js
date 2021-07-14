@@ -29,6 +29,16 @@ const UserSchema = new Schema({
 	],
 });
 
+UserSchema.methods.getPublicProfile = function () {
+	const user = this;
+	const userObject = user.toObject();
+
+	delete userObject.password;
+	delete userObject.tokens;
+
+	return userObject;
+};
+
 UserSchema.methods.generateAuthToken = async function () {
 	const user = this;
 
