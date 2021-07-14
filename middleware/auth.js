@@ -4,7 +4,6 @@ const config = require("config");
 
 module.exports = async (req, res, next) => {
 	const token = req.header("x-auth-token");
-	console.log(token);
 
 	try {
 		const decodedUser = jwt.verify(token, config.get("secretKey"));

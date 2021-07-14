@@ -53,9 +53,32 @@ router.post("/users/login", async (req, res) => {
 });
 
 //Logout Route
-// router.post("/users/logout", auth, async (req, res) => {
+router.post("/users/logout", auth, async (req, res) => {
+	try {
+		req.user.tokens = req.user.tokens.filter((token) => {
+			return token.token != req.token;
+		});
 
-// });
+		await req.user.save();
+		res.status(200).send();
+	} catch (error) {
+		console.log(error);
+		res.status(500).send();
+	}
+});
 
-router.post("");
+//Logout All
+router.post("/users/logoutAll", auth, async (req, res) => {
+	try {
+		req.user.tokens = [];
+
+		await req.user.save();
+
+		res.status(200).send();
+	} catch (error) {
+		console.log(error);
+		res.status(500).send();
+	}
+});
+
 module.exports = router;
