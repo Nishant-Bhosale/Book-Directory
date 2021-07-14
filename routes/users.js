@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/User");
 const auth = require("../middleware/auth");
+const { response } = require("express");
 
 //Get All Users
 router.get("/users", async (req, res) => {
@@ -75,6 +76,43 @@ router.post("/users/logoutAll", auth, async (req, res) => {
 		await req.user.save();
 
 		res.status(200).send();
+	} catch (error) {
+		console.log(error);
+		res.status(500).send();
+	}
+});
+
+//Update User Profile
+router.put("/users/me", auth, async (req, res) => {
+	const updates = Object.keys(req.body);
+	const validUpdates = ["name", "email", "password"];
+
+	const valid = updates.every((update) => {
+		return validUpdates.includes(update);
+	});
+
+	if (!valid) {
+		return res.status(400).send({ error: "Please enter all fields correctly" });
+	}
+	try {
+		updates.forEach((update) => {
+			req.user[update] = req.body[update];
+		});
+
+		await req.user.save();
+
+		res.status(201).send(req.user);
+	} catch (error) {
+		console.log(error);
+		res.status(500).send();
+	}
+});
+
+//Delete User
+router.delete("/users/me", auth, async (req, res) => {
+	try {
+		await req.user.remove();
+		res.json(req.user);
 	} catch (error) {
 		console.log(error);
 		res.status(500).send();

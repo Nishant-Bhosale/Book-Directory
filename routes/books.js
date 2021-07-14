@@ -1,9 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const Book = require("../models/Book");
-
+const auth = require("../middleware/auth");
 const serverError = { msg: "Internal Server Error" };
 
+//Get All books
 router.get("/books", async (req, res) => {
 	try {
 		const books = await Book.find();
@@ -14,9 +15,10 @@ router.get("/books", async (req, res) => {
 	}
 });
 
-router.post("/books", async (req, res) => {
-	// console.log(req.body);
+//Add new Book
+router.post("/books", auth, async (req, res) => {
 	const { name } = req.body;
+
 	try {
 		const sameBook = await Book.findOne({ name });
 
@@ -29,6 +31,7 @@ router.post("/books", async (req, res) => {
 		});
 
 		await book.save();
+
 		res.status(201).json(book);
 	} catch (error) {
 		console.log(error);
@@ -36,7 +39,8 @@ router.post("/books", async (req, res) => {
 	}
 });
 
-router.put("/books/:id", async (req, res) => {
+//Update Existing Book
+router.put("/books/:id", auth, async (req, res) => {
 	const id = req.params.id;
 	const { name, author, publisher, price } = req.body;
 	try {
@@ -62,7 +66,8 @@ router.put("/books/:id", async (req, res) => {
 	}
 });
 
-router.delete("/books/:id", async (req, res) => {
+//Delete a book
+router.delete("/books/:id", auth, async (req, res) => {
 	const id = req.params.id;
 
 	try {
