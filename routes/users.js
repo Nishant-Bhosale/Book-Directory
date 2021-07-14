@@ -1,7 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const User = require("../models/User");
+const auth = require("../middleware/auth");
 
+//Get All Users
 router.get("/users", async (req, res) => {
 	try {
 		const users = await User.find({});
@@ -14,6 +16,7 @@ router.get("/users", async (req, res) => {
 	}
 });
 
+//Sign Up Route
 router.post("/users", async (req, res) => {
 	const { email } = req.body;
 	try {
@@ -34,6 +37,7 @@ router.post("/users", async (req, res) => {
 	}
 });
 
+//Login Route
 router.post("/users/login", async (req, res) => {
 	const { email, password } = req.body;
 	try {
@@ -48,4 +52,10 @@ router.post("/users/login", async (req, res) => {
 	}
 });
 
+//Logout Route
+// router.post("/users/logout", auth, async (req, res) => {
+
+// });
+
+router.post("");
 module.exports = router;
