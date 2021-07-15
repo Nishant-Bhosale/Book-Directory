@@ -19,6 +19,7 @@ router.get("/books", async (req, res) => {
 		res.status(500).send();
 	}
 });
+
 //Get User Specific books
 router.get("/books/me", auth, async (req, res) => {
 	try {
@@ -60,7 +61,7 @@ router.put("/books/:id", auth, async (req, res) => {
 	const id = req.params.id;
 	const { name, author, publisher, price } = req.body;
 	try {
-		let book = await Book.findById({ id, owner: req.user._id });
+		let book = await Book.findById({ _id: id, owner: req.user._id });
 
 		if (!book) {
 			return res.status(404).json({ error: "Book does not exist" });
@@ -87,7 +88,7 @@ router.delete("/books/:id", auth, async (req, res) => {
 	const id = req.params.id;
 
 	try {
-		const book = await Book.findByIdAndDelete({ id, owner: req.user._id });
+		const book = await Book.findByIdAndDelete({ _id: id, owner: req.user._id });
 
 		if (!book) {
 			return res.status(400).send({ error: "Book does not exist" });
