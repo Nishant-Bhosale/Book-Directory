@@ -32,8 +32,6 @@ router.post("/books/review/:id", auth, async (req, res) => {
 			reviewBy: req.user.name,
 		});
 
-		console.log(checkBookReview);
-
 		if (checkBookReview) {
 			return res
 				.status(400)
@@ -49,6 +47,33 @@ router.post("/books/review/:id", auth, async (req, res) => {
 		await bookReview.save();
 
 		res.status(201).send(bookReview);
+	} catch (error) {
+		console.log(error);
+		res.status(500).send();
+	}
+});
+
+//Edit Review
+router.put("/books/review/:id", auth, async (req, res) => {
+	const _id = req.params.id;
+	const { review } = req.body;
+	const filter = {
+		for: _id,
+		reviewBy: req.user.name,
+	};
+
+	try {
+		const reviewToUpdate = await BookReview.find(filter);
+
+		if (!reviewToUpdate) {
+			return res.status(404).json({ msg: "Please add a review first" });
+		}
+
+		const updatedReview = await BookReview.updateOne(filter, {
+			review: review,
+		});
+
+		res.status(200).send({ msg: "Review Updated" });
 	} catch (error) {
 		console.log(error);
 		res.status(500).send();
