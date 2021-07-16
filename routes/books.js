@@ -68,6 +68,10 @@ router.put("/books/:id", auth, async (req, res) => {
 			return res.status(404).json({ error: "Book does not exist" });
 		}
 
+		if (req.user._id.toString() !== book.owner.toString()) {
+			return res.status(400).json({ err: "Cannot update book." });
+		}
+
 		let newBook = {};
 
 		if (name) newBook.name = name;
@@ -89,12 +93,17 @@ router.delete("/books/:id", auth, async (req, res) => {
 	const id = req.params.id;
 
 	try {
-		const book = await Book.findByIdAndDelete({ _id: id, owner: req.user._id });
+		const book = await Book.findOne({ _id: id, owner: req.user._id });
 
 		if (!book) {
 			return res.status(400).send({ error: "Book does not exist" });
 		}
 
+		if (req.user._id.toString() !== book.owner.toString()) {
+			return res.status(400).json({ err: "Cannot Delete Book" });
+		}
+
+		await book.remove();
 		res.status(200).json(book);
 	} catch (error) {
 		console.log(error);
