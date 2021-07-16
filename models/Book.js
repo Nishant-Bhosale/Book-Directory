@@ -19,6 +19,9 @@ const bookSchema = new Schema({
 		type: Number,
 		required: true,
 	},
+	bookImage: {
+		type: Buffer,
+	},
 	owner: {
 		type: mongoose.Schema.Types.ObjectId,
 		required: true,

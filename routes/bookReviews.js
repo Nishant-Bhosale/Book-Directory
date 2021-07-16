@@ -2,6 +2,7 @@ const express = require("express");
 const auth = require("../middleware/auth");
 const router = express.Router();
 const BookReview = require("../models/BookReview");
+const multer = require("multer");
 
 //Get Reviews
 router.get("/books/review/:id", auth, async (req, res) => {
@@ -46,7 +47,7 @@ router.post("/books/review/:id", auth, async (req, res) => {
 
 		await bookReview.save();
 
-		res.status(201).send(bookReview);
+		res.status(201).json(bookReview);
 	} catch (error) {
 		console.log(error);
 		res.status(500).send();

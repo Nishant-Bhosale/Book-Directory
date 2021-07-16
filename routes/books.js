@@ -3,6 +3,7 @@ const router = express.Router();
 const Book = require("../models/Book");
 const auth = require("../middleware/auth");
 const serverError = { msg: "Internal Server Error" };
+const multer = require("multer");
 
 //Get All Books
 router.get("/books", async (req, res) => {
@@ -100,4 +101,43 @@ router.delete("/books/:id", auth, async (req, res) => {
 		res.status(500).send(serverError);
 	}
 });
+
+const uploadImage = multer({
+	limits: {
+		fileSize: 1000000,
+	},
+	fileFilter(req, file, cb) {
+		if (!file.originalname.endsWith(".jpg")) {
+			return cb(new Error("Please provide the right file"));
+		}
+
+		cb(undefined, true);
+	},
+});
+
+//Add Book Image
+router.post(
+	"/books/:id/image",
+	auth,
+	uploadImage.single("upload"),
+	async (req, res) => {
+		const _id = req.params.id;
+		try {
+			const book = await Book.findById(_id);
+
+			if (book.bookImage) {
+				return res.status(400).json({ err: "Image already exists" });
+			}
+
+			book.bookImage = req.file.buffer;
+
+			await book.save();
+
+			res.json(book);
+		} catch (error) {
+			console.log(error);
+			res.status(500).send();
+		}
+	},
+);
 module.exports = router;
