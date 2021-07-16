@@ -1,33 +1,38 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
-const bookSchema = new Schema({
-	name: {
-		type: String,
-		required: true,
-		unique: true,
+const bookSchema = new Schema(
+	{
+		name: {
+			type: String,
+			required: true,
+			unique: true,
+		},
+		author: {
+			type: String,
+			required: true,
+		},
+		publisher: {
+			type: String,
+			required: true,
+		},
+		price: {
+			type: Number,
+			required: true,
+		},
+		bookImage: {
+			type: Buffer,
+		},
+		owner: {
+			type: mongoose.Schema.Types.ObjectId,
+			required: true,
+			ref: "user",
+		},
 	},
-	author: {
-		type: String,
-		required: true,
+	{
+		timestamps: true,
 	},
-	publisher: {
-		type: String,
-		required: true,
-	},
-	price: {
-		type: Number,
-		required: true,
-	},
-	bookImage: {
-		type: Buffer,
-	},
-	owner: {
-		type: mongoose.Schema.Types.ObjectId,
-		required: true,
-		ref: "user",
-	},
-});
+);
 
 bookSchema.methods.removeOwnerProp = function () {
 	const book = this;
